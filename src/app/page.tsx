@@ -2,10 +2,12 @@
 "use client";
 
 import { Navbar } from "@/components/navbar/Navbar";
+import LandingPage from "@/job-board/page";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-bg dark:bg-bg-dark text-text dark:text-text-dark">
+    <>
+      {/* <div className="min-h-screen bg-bg dark:bg-bg-dark text-text dark:text-text-dark">
       <Navbar />
 
       <main className="container mx-auto px-4 py-8">
@@ -16,10 +18,10 @@ export default function Home() {
           <p className="text-textSecondary dark:text-textSecondary-dark mb-4">
             This is the home page. Navigate to other pages to see that the theme
             persists across the application.
-          </p>
+          </p> */}
 
-          {/* Sample card */}
-          <div className="bg-bgCard dark:bg-bgCard-dark rounded-lg shadow p-6 mb-6 border border-border dark:border-border-dark">
+      {/* Sample card */}
+      {/* <div className="bg-bgCard dark:bg-bgCard-dark rounded-lg shadow p-6 mb-6 border border-border dark:border-border-dark">
             <h3 className="font-medium mb-2">Featured Job</h3>
             <p className="text-textSecondary dark:text-textSecondary-dark text-sm mb-4">
               Senior Developer at TechCorp
@@ -38,6 +40,8 @@ export default function Home() {
           </div>
         </section>
       </main>
-    </div>
+    </div> */}
+      <LandingPage />
+    </>
   );
 }
