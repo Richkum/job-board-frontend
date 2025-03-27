@@ -807,13 +807,13 @@ export default function LandingPage() {
 
           <nav className="hidden md:flex items-center space-x-8">
             <Link
-              href="#"
+              href="#Featured-Jobs"
               className="text-textSecondary dark:text-textSecondary-dark hover:text-primary dark:hover:text-primary transition-colors"
             >
               Find Jobs
             </Link>
             <Link
-              href="#"
+              href="#Featured-Jobs"
               className="text-textSecondary dark:text-textSecondary-dark hover:text-primary dark:hover:text-primary transition-colors"
             >
               For Employers
@@ -1258,7 +1258,7 @@ export default function LandingPage() {
         </section>
 
         {/* Featured Jobs Section */}
-        <section className="py-16">
+        <section id="Featured-Jobs" className="py-16">
           <div className="container mx-auto px-4">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-bold text-text dark:text-text-dark">
@@ -1582,7 +1582,7 @@ export default function LandingPage() {
                 className="bg-bgCard dark:bg-bgCard-dark rounded-lg p-6 border border-border dark:border-border-dark"
                 whileHover={{ y: -5, transition: { duration: 0.2 } }}
               >
-                <div className="flex items-center mb-4">
+                <div id="testimonial" className="flex items-center mb-4">
                   <Star
                     className="text-warning"
                     size={20}
