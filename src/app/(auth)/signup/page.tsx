@@ -27,7 +27,11 @@ export default function SignUpPage() {
     confirmPassword: false,
   });
   const [agreed, setAgreed] = useState(false);
-  const [toast, setToast] = useState({ show: false, type: "", message: "" });
+  const [toast, setToast] = useState<{
+    show: boolean;
+    type?: "success" | "error" | "warning" | "info"; // Same as ToastType
+    message: string;
+  }>({ show: false, message: "" });
   const [loading, setLoading] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -235,7 +239,7 @@ export default function SignUpPage() {
 
   const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
-    setToast({ show: false, type: "", message: "" });
+    setToast({ show: false, type: "info", message: "" });
 
     // Full validation on submit
     if (!validateForm()) {
@@ -307,7 +311,7 @@ export default function SignUpPage() {
         <Toast
           type={toast.type}
           message={toast.message}
-          onClose={() => setToast({ show: false, type: "", message: "" })}
+          onClose={() => setToast({ show: false, type: "info", message: "" })}
         />
       )}
 

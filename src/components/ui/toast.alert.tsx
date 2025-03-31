@@ -3,15 +3,18 @@
 import React, { useEffect } from "react";
 import { X, CheckCircle, AlertCircle, Info } from "lucide-react";
 
+// Define the allowed types for the toast
+export type ToastType = "success" | "error" | "warning" | "info";
+
 interface ToastProps {
-  type?: "success" | "error" | "warning" | "info";
+  type?: ToastType;
   message: string;
   duration?: number;
   onClose: () => void;
 }
 
 const Toast: React.FC<ToastProps> = ({
-  type = "info",
+  type = "info", // Default value if not provided
   message,
   duration = 5000,
   onClose,
@@ -20,7 +23,6 @@ const Toast: React.FC<ToastProps> = ({
     const timer = setTimeout(() => {
       onClose();
     }, duration);
-
     return () => clearTimeout(timer);
   }, [duration, onClose]);
 
