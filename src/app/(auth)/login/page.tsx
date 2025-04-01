@@ -276,13 +276,13 @@ export default function LoginPage() {
         <div className="flex flex-col sm:flex-row sm:justify-between text-sm text-textSecondary dark:text-textSecondary-dark mt-2 gap-2">
           <Link
             href="/reset-password"
-            className="underline hover:text-primary transition-colors"
+            className="hover:underline text-[13px] hover:text-primary transition-colors"
           >
             Forgot Password?
           </Link>
           <Link
             href="/signup"
-            className="underline hover:text-primary transition-colors"
+            className="hover:underline hover:text-primary text-[13px] transition-colors"
           >
             Don't have an account? Sign Up
           </Link>
