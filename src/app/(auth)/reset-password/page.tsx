@@ -29,7 +29,11 @@ export default function ResetPasswordPage() {
   const [showVerification, setShowVerification] = useState(false);
   const [showNewPasswordFields, setShowNewPasswordFields] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState({ show: false, type: "", message: "" });
+  const [toast, setToast] = useState<{
+    show: boolean;
+    type?: "success" | "error" | "warning" | "info"; // Same as ToastType
+    message: string;
+  }>({ show: false, message: "" });
 
   // Email validation regex
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -154,7 +158,7 @@ export default function ResetPasswordPage() {
   // Submit email for reset
   const handleSubmitEmail = (e: React.FormEvent) => {
     e.preventDefault();
-    setToast({ show: false, type: "", message: "" });
+    setToast({ show: false, message: "" });
     setEmailTouched(true);
 
     if (!isEmailFormValid()) {
@@ -203,7 +207,7 @@ export default function ResetPasswordPage() {
   // Submit new password
   const handleNewPasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setToast({ show: false, type: "", message: "" });
+    setToast({ show: false, message: "" });
     setPasswordTouched(true);
     setConfirmPasswordTouched(true);
 
@@ -243,9 +247,9 @@ export default function ResetPasswordPage() {
       {/* Toast notification */}
       {toast.show && (
         <Toast
-          type={toast.type}
+          type={toast.type} // Type is optional (defaults to "info")
           message={toast.message}
-          onClose={() => setToast({ show: false, type: "", message: "" })}
+          onClose={() => setToast({ show: false, message: "" })}
         />
       )}
 
@@ -322,7 +326,7 @@ export default function ResetPasswordPage() {
             <button
               onClick={() => {
                 setShowVerification(false);
-                setToast({ show: false, type: "", message: "" });
+                setToast({ show: false, message: "" });
               }}
               className="underline hover:text-primary dark:hover:text-primary-dark transition-colors"
             >
@@ -445,7 +449,7 @@ export default function ResetPasswordPage() {
               onClick={() => {
                 setShowNewPasswordFields(false);
                 setShowVerification(true);
-                setToast({ show: false, type: "", message: "" });
+                setToast({ show: false, message: "" });
               }}
               className="underline hover:text-primary dark:hover:text-primary-dark transition-colors"
             >

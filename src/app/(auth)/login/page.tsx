@@ -31,7 +31,11 @@ export default function LoginPage() {
     };
   }, []);
   const [showPassword, setShowPassword] = useState(false);
-  const [toast, setToast] = useState({ show: false, type: "", message: "" });
+  const [toast, setToast] = useState<{
+    show: boolean;
+    type?: "success" | "error" | "warning" | "info"; // Same as ToastType
+    message: string;
+  }>({ show: false, message: "" });
   const [loading, setLoading] = useState(false);
   const [formTouched, setFormTouched] = useState({
     email: false,
@@ -134,7 +138,7 @@ export default function LoginPage() {
 
   const handleLogin = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    setToast({ show: false, type: "", message: "" });
+    setToast({ show: false, type: "info", message: "" });
 
     // Full validation on submit
     if (!validateForm()) {
@@ -179,7 +183,7 @@ export default function LoginPage() {
         <Toast
           type={toast.type}
           message={toast.message}
-          onClose={() => setToast({ show: false, type: "", message: "" })}
+          onClose={() => setToast({ show: false, type: "info", message: "" })}
         />
       )}
 
@@ -272,13 +276,13 @@ export default function LoginPage() {
         <div className="flex flex-col sm:flex-row sm:justify-between text-sm text-textSecondary dark:text-textSecondary-dark mt-2 gap-2">
           <Link
             href="/reset-password"
-            className="underline hover:text-primary transition-colors"
+            className="hover:underline text-[13px] hover:text-primary transition-colors"
           >
             Forgot Password?
           </Link>
           <Link
             href="/signup"
-            className="underline hover:text-primary transition-colors"
+            className="hover:underline hover:text-primary text-[13px] transition-colors"
           >
             Don't have an account? Sign Up
           </Link>
