@@ -4,60 +4,65 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
-
-interface ThemeContextType {
+type ThemeContextType = {
   theme: Theme;
+  isSystemPreference: boolean;
   toggleTheme: () => void;
-}
+};
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
+  const [isSystemPreference, setIsSystemPreference] = useState(true);
+  const [isReady, setIsReady] = useState(false);
 
-  // Load theme from localStorage on initial render (client-side only)
   useEffect(() => {
+    // Client-side initialization
     const storedTheme = localStorage.getItem("theme") as Theme | null;
+    const systemDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
 
-    // Check localStorage first
-    if (storedTheme) {
-      setTheme(storedTheme);
-    }
-    // Otherwise check user system preferences
-    else if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
-      setTheme("dark");
-    }
+    const initialTheme = storedTheme || (systemDark ? "dark" : "light");
+    setTheme(initialTheme);
+    setIsSystemPreference(!storedTheme);
+    setIsReady(true);
+
+    // Apply immediately to prevent flash
+    document.documentElement.classList.add(initialTheme);
   }, []);
 
-  // Apply theme class to HTML element whenever theme changes
   useEffect(() => {
-    const root = window.document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
+    if (!isReady) return;
+
+    const root = document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
     localStorage.setItem("theme", theme);
-  }, [theme]);
+  }, [theme, isReady]);
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+    setTheme((prev) => {
+      const newTheme = prev === "light" ? "dark" : "light";
+      setIsSystemPreference(false);
+      return newTheme;
+    });
   };
 
+  // Prevent rendering until theme is initialized
+  if (!isReady) return null;
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, isSystemPreference, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
-// Custom hook to use the theme context
 export function useTheme() {
   const context = useContext(ThemeContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
