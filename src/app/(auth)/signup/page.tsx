@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import type React from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import VerificationCode from "@/components/auth/VerificationCode";
 import { Eye, EyeOff } from "lucide-react";
@@ -237,7 +238,8 @@ export default function SignUpPage() {
     return isValid;
   };
 
-  const handleSignUp = (e: React.FormEvent) => {
+  // Replace the handleSignUp function with this implementation
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setToast({ show: false, type: "info", message: "" });
 
@@ -248,60 +250,115 @@ export default function SignUpPage() {
 
     setLoading(true);
 
-    // Simulate API call with error handling
-    setTimeout(() => {
-      try {
-        setLoading(false);
-        // If successful, show verification code input
-        setShowVerification(true);
-        setToast({
-          show: true,
-          type: "success",
-          message: "Verification code sent to your email!",
-        });
-      } catch (error) {
-        setLoading(false);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: formData.name,
+            email: formData.email,
+            password: formData.password,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      setLoading(false);
+
+      if (!response.ok) {
+        // Handle error response from backend
         setToast({
           show: true,
           type: "error",
-          message: "An error occurred. Please try again.",
+          message: data.message || "Registration failed. Please try again.",
         });
-        console.error("Signup error:", error);
+        console.log("Signup error:", data);
+
+        return;
       }
-    }, 1500);
+
+      // If successful, show verification code input
+      setShowVerification(true);
+      setToast({
+        show: true,
+        type: "success",
+        message: data.message || "Verification code sent to your email!",
+      });
+    } catch (error) {
+      setLoading(false);
+      name;
+      setToast({
+        show: true,
+        type: "error",
+        message: "Connection error. Please check your internet and try again.",
+      });
+      console.error("Signup error:", error);
+    }
   };
 
-  const handleVerificationComplete = (code: string) => {
+  // Replace the handleVerificationComplete function with this implementation
+  const handleVerificationComplete = async (code: string) => {
     // Code is the 6-digit verification code
     console.log("User entered code:", code);
 
-    // Simulate verifying code
     setLoading(true);
 
-    setTimeout(() => {
-      try {
-        setLoading(false);
-        setToast({
-          show: true,
-          type: "success",
-          message: "Verification successful! Redirecting...",
-        });
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/verify-email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            code: code,
+          }),
+        }
+      );
 
-        // Simulate redirect after successful verification
-        setTimeout(() => {
-          // In a real app you would use Next.js router:
-          // router.push("/dashboard");
-          window.location.href = "/dashboard"; // Fallback for demo
-        }, 1500);
-      } catch (error) {
-        setLoading(false);
+      const data = await response.json();
+
+      setLoading(false);
+
+      if (!response.ok) {
         setToast({
           show: true,
           type: "error",
-          message: "Verification failed. Please try again.",
+          message: data.message || "Verification failed. Please try again.",
         });
+        return;
       }
-    }, 1500);
+
+      setToast({
+        show: true,
+        type: "success",
+        message: data.message || "Verification successful! Redirecting...",
+      });
+
+      // Redirect after successful verification
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+        // For a production app, use Next.js router instead:
+        // import { useRouter } from 'next/navigation';
+        // const router = useRouter();
+        // router.push('/dashboard');
+      }, 1500);
+    } catch (error) {
+      setLoading(false);
+      setToast({
+        show: true,
+        type: "error",
+        message: "Connection error. Please check your internet and try again.",
+      });
+      console.error("Verification error:", error);
+    }
   };
 
   return (

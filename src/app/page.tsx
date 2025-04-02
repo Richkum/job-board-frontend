@@ -1,8 +1,8 @@
-// src/app/page.tsx
 "use client";
 
 import { Navbar } from "@/components/navbar/Navbar";
 import LandingPage from "@/job-board/page";
+import { useEffect } from "react";
 
 export default function Home() {
   return (
