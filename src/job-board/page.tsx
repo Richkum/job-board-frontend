@@ -18,24 +18,8 @@ import {
   Star,
   GitMerge,
 } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
-import LoadingIndicator from "@/components/ui/Loading";
 
 export default function LandingPage() {
-  const { isAuthenticated, loading } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && isAuthenticated) {
-      router.push("/dashboard");
-    }
-  }, [isAuthenticated, loading, router]);
-
-  if (loading) {
-    return <LoadingIndicator />;
-  }
-
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navigation */}

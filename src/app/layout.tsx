@@ -11,35 +11,14 @@ export const metadata: Metadata = {
   description: "Find your next career opportunity",
 };
 
+// app/layout.tsx
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head>
-        {/* This script runs before the page renders */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  const storedTheme = localStorage.getItem('theme');
-                  if (storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.classList.add('dark');
-                  } else {
-                    document.documentElement.classList.remove('dark');
-                  }
-                } catch (e) {
-                  console.error('Failed to set initial theme', e);
-                }
-              })();
-            `,
-          }}
-        />
-      </head>
-
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <AuthProvider>
           <ThemeProvider>{children}</ThemeProvider>
