@@ -21,6 +21,9 @@ export default function ResetPasswordPage() {
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
+  // Verification code
+  const [verificationCode, setVerificationCode] = useState("");
+
   // Password visibility toggles
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -31,7 +34,7 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{
     show: boolean;
-    type?: "success" | "error" | "warning" | "info"; // Same as ToastType
+    type?: "success" | "error" | "warning" | "info";
     message: string;
   }>({ show: false, message: "" });
 
@@ -66,7 +69,7 @@ export default function ResetPasswordPage() {
     }
   }, [email, emailTouched]);
 
-  // Validate password
+  // Simplified password validation
   useEffect(() => {
     if (!passwordTouched) return;
 
@@ -74,18 +77,12 @@ export default function ResetPasswordPage() {
       setPasswordError("Password is required");
     } else if (newPassword.length < 8) {
       setPasswordError("Password must be at least 8 characters");
-    } else if (!/[A-Z]/.test(newPassword)) {
-      setPasswordError("Password must contain at least one uppercase letter");
-    } else if (!/[a-z]/.test(newPassword)) {
-      setPasswordError("Password must contain at least one lowercase letter");
-    } else if (!/[0-9]/.test(newPassword)) {
-      setPasswordError("Password must contain at least one number");
     } else {
       setPasswordError("");
     }
   }, [newPassword, passwordTouched]);
 
-  // Validate confirm password
+  // Simplified confirm password validation
   useEffect(() => {
     if (!confirmPasswordTouched) return;
 
@@ -98,7 +95,7 @@ export default function ResetPasswordPage() {
     }
   }, [confirmNewPassword, newPassword, confirmPasswordTouched]);
 
-  // Email input handlers
+  // Input handlers
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
@@ -107,7 +104,6 @@ export default function ResetPasswordPage() {
     setEmailTouched(true);
   };
 
-  // Password input handlers
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewPassword(e.target.value);
   };
@@ -135,28 +131,22 @@ export default function ResetPasswordPage() {
     setShowConfirmPassword((prev) => !prev);
   };
 
-  // Check if email form is valid
+  // Form validation
   const isEmailFormValid = () => {
-    return email && emailRegex.test(email) && !emailError;
+    return email && emailRegex.test(email);
   };
 
-  // Check if password form is valid
   const isPasswordFormValid = () => {
     return (
       newPassword &&
       newPassword.length >= 8 &&
-      /[A-Z]/.test(newPassword) &&
-      /[a-z]/.test(newPassword) &&
-      /[0-9]/.test(newPassword) &&
       confirmNewPassword &&
-      confirmNewPassword === newPassword &&
-      !passwordError &&
-      !confirmPasswordError
+      confirmNewPassword === newPassword
     );
   };
 
   // Submit email for reset
-  const handleSubmitEmail = (e: React.FormEvent) => {
+  const handleSubmitEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     setToast({ show: false, message: "" });
     setEmailTouched(true);
@@ -167,31 +157,53 @@ export default function ResetPasswordPage() {
 
     setLoading(true);
 
-    setTimeout(() => {
-      try {
-        setLoading(false);
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/auth/forgot-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json();
+
+      setLoading(false);
+
+      if (response.ok) {
         setShowVerification(true);
         setToast({
           show: true,
           type: "success",
           message: "Verification code sent to your email",
         });
-      } catch (error) {
-        setLoading(false);
+      } else {
         setToast({
           show: true,
           type: "error",
-          message: "Failed to send verification code. Please try again.",
+          message: data.message || "Failed to send verification code",
         });
       }
-    }, 1500);
+    } catch (error) {
+      setLoading(false);
+      setToast({
+        show: true,
+        type: "error",
+        message: "Failed to send verification code. Please try again.",
+      });
+    }
   };
 
   // Handle verification code completion
   const handleVerificationComplete = (code: string) => {
-    console.log("Verification code for reset:", code);
+    setVerificationCode(code);
     setLoading(true);
 
+    // We don't verify the code yet, just move to the next step
+    // The verification will happen when submitting the new password
     setTimeout(() => {
       setLoading(false);
       setShowVerification(false);
@@ -199,13 +211,13 @@ export default function ResetPasswordPage() {
       setToast({
         show: true,
         type: "success",
-        message: "Verification successful! Create your new password",
+        message: "Create your new password",
       });
-    }, 1000);
+    }, 500);
   };
 
   // Submit new password
-  const handleNewPasswordSubmit = (e: React.FormEvent) => {
+  const handleNewPasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setToast({ show: false, message: "" });
     setPasswordTouched(true);
@@ -217,9 +229,27 @@ export default function ResetPasswordPage() {
 
     setLoading(true);
 
-    setTimeout(() => {
-      try {
-        setLoading(false);
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/auth/reset-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            code: verificationCode,
+            newPassword,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      setLoading(false);
+
+      if (response.ok) {
         setToast({
           show: true,
           type: "success",
@@ -227,19 +257,23 @@ export default function ResetPasswordPage() {
         });
 
         setTimeout(() => {
-          // In a real app you would use Next.js router:
-          // router.push("/login");
-          window.location.href = "/login"; // Fallback for demo
+          window.location.href = "/login";
         }, 2000);
-      } catch (error) {
-        setLoading(false);
+      } else {
         setToast({
           show: true,
           type: "error",
-          message: "Failed to reset password. Please try again.",
+          message: data.message || "Failed to reset password",
         });
       }
-    }, 1500);
+    } catch (error) {
+      setLoading(false);
+      setToast({
+        show: true,
+        type: "error",
+        message: "Failed to reset password. Please try again.",
+      });
+    }
   };
 
   return (
@@ -247,7 +281,7 @@ export default function ResetPasswordPage() {
       {/* Toast notification */}
       {toast.show && (
         <Toast
-          type={toast.type} // Type is optional (defaults to "info")
+          type={toast.type}
           message={toast.message}
           onClose={() => setToast({ show: false, message: "" })}
         />
