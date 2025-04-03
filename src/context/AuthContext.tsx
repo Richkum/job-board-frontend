@@ -98,7 +98,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
               const response = await fetch(`${API_URL}/auth/sessions`, {
                 headers: {
                   Authorization: `Bearer ${storedToken}`,
+                  "Content-Type": "application/json",
                 },
+              });
+
+              console.error("Token validation response:", {
+                status: response.status,
+                statusText: response.statusText,
               });
 
               if (!response.ok) {

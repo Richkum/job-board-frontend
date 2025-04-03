@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import LoadingIndicator from "@/components/ui/Loading";
 import LogoutButton from "@/components/ui/logout";
+import DashboardLayout from "@/components/laoyout/DashboardLayout";
 
 function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -28,20 +29,22 @@ function Dashboard() {
 
   return (
     <ProtectedRoute>
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <DashboardLayout>
+        <div className="p-6">
+          <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
 
-        <div className="mb-6">
-          <p className="mb-2">Welcome, {user?.username || user?.email}!</p>
-          {user?.email && (
-            <p className="text-sm text-gray-600">Email: {user.email}</p>
-          )}
+          <div className="mb-6">
+            <p className="mb-2">Welcome, {user?.username || user?.email}!</p>
+            {user?.email && (
+              <p className="text-sm text-gray-600">Email: {user.email}</p>
+            )}
+          </div>
+
+          <LogoutButton />
+
+          {/* Rest of your dashboard */}
         </div>
-
-        <LogoutButton />
-
-        {/* Rest of your dashboard */}
-      </div>
+      </DashboardLayout>
     </ProtectedRoute>
   );
 }
