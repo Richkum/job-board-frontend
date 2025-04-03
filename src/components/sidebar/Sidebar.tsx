@@ -51,7 +51,7 @@ const sidebarLinks: SidebarLink[] = [
     roles: ["jobSeeker", "admin"],
   },
   {
-    href: "/jobs/manage",
+    href: "/manage-jobs",
     label: "Manage Jobs",
     icon: <Briefcase size={20} />,
     roles: ["employer", "admin"],
@@ -80,7 +80,7 @@ const sidebarLinks: SidebarLink[] = [
     roles: ["jobSeeker", "admin"],
   },
   {
-    href: "/applications/review",
+    href: "/applications",
     label: "Review Applications",
     icon: <CheckSquare size={20} />,
     roles: ["employer", "admin"],
@@ -194,7 +194,7 @@ const Sidebar = () => {
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileMenu}
-        className="fixed top-4 left-4 z-40 p-2 rounded-md bg-bgCard dark:bg-bgCard-dark lg:hidden"
+        className="fixed top-2 left-2 z-40 p-1 rounded-md bg-bgCard dark:bg-bgCard-dark lg:hidden"
         aria-label="Toggle menu"
       >
         {isMobileMenuOpen ? (
@@ -216,7 +216,7 @@ const Sidebar = () => {
       <aside
         className={`fixed top-0 left-0 z-30 h-screen transition-transform ${
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 w-64 bg-bgCard dark:bg-bgCard-dark border-r border-border dark:border-border-dark`}
+        } lg:translate-x-0 lg:w-80  bg-bgCard dark:bg-bgCard-dark border-r border-border dark:border-border-dark`}
       >
         {/* Logo Section */}
         <div className="flex items-center justify-center h-16 border-b border-border dark:border-border-dark">
@@ -252,7 +252,15 @@ const Sidebar = () => {
         )}
 
         {/* Navigation Links */}
-        <div className="py-4 flex flex-col h-[calc(100%-8rem)] overflow-y-auto">
+        <div
+          className="py-4 flex flex-col h-[calc(100%-8rem)] overflow-y-auto scrollbar-hide"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          <style jsx>{`
+            div::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
           <nav className="flex-grow space-y-1 px-3">
             {/* Main Navigation section */}
             <div className="mb-4">

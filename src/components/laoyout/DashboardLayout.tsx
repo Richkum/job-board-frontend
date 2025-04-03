@@ -9,7 +9,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <div className="min-h-screen bg-bg dark:bg-bg-dark">
       <Sidebar />
-      <main className="lg:ml-64">
+      <main className="lg:ml-80">
         <div className="p-4 lg:p-0">{children}</div>
       </main>
     </div>
