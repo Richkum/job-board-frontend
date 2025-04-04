@@ -108,7 +108,7 @@ const sidebarLinks: SidebarLink[] = [
     roles: ["employer", "admin"],
   },
   {
-    href: "/profile",
+    href: "/settings/profile",
     label: "My Profile",
     icon: <User size={20} />,
   },

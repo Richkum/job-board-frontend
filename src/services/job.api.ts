@@ -67,6 +67,58 @@ interface RecentActivity {
   updatedAt: string;
 }
 
+// Add these to your existing types
+
+export enum JobSortBy {
+  NEWEST = "newest",
+  SALARY_HIGH = "salary_high",
+  SALARY_LOW = "salary_low",
+  MOST_VIEWED = "most_viewed",
+  DEADLINE_CLOSEST = "deadline_closest",
+}
+
+export interface SearchJobsFilters {
+  search?: string;
+  categories?: string[];
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryCurrency?: "USD" | "EUR" | "GBP" | "FCFA";
+  salaryPeriod?: "hourly" | "monthly" | "yearly";
+  locationType?: "remote" | "on-site" | "hybrid";
+  country?: string;
+  city?: string;
+  experienceLevels?: ("entry" | "junior" | "mid" | "senior" | "lead" | "any")[];
+  jobTypes?: (
+    | "full-time"
+    | "part-time"
+    | "contract"
+    | "freelance"
+    | "internship"
+  )[];
+  postedAfter?: Date;
+  postedBefore?: Date;
+  benefits?: string[];
+  page?: number;
+  limit?: number;
+  sortBy?: JobSortBy;
+  includeCompanyInfo?: boolean;
+}
+
+export interface SearchJobsResponse {
+  jobs: CreateJobData[];
+  total: number;
+  pages: number;
+}
+
+// Interface for pagination response
+interface PaginatedResponse<T> {
+  jobs: T[];
+  total: number;
+  currentPage: number;
+  totalPages: number;
+  hasMore: boolean;
+}
+
 const flattenObject = (obj: any) => {
   const flatData: Record<string, any> = {};
 
@@ -268,5 +320,145 @@ export const duplicateJob = async (
   } catch (error) {
     console.error("Frontend - Duplicate job error:", error);
     throw error;
+  }
+};
+
+// Get active jobs (for initial listing)
+export const getActiveJobs = async (
+  page: number = 1,
+  limit: number = 10,
+  token: string
+): Promise<PaginatedResponse<CreateJobData>> => {
+  try {
+    const response = await fetch(
+      `${API_URL}/jobs?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to fetch active jobs");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Frontend - Fetch active jobs error:", error);
+    throw error;
+  }
+};
+
+// Search and filter jobs
+export const searchJobs = async (
+  params: {
+    search?: string;
+    jobTypes?: string[];
+    categories?: string[];
+    locationTypes?: string[];
+    country?: string;
+    city?: string;
+    experienceLevels?: string[];
+    salaryMin?: number;
+    salaryMax?: number;
+    salaryCurrency?: string;
+    salaryPeriod?: string;
+    page?: number;
+    limit?: number;
+  },
+  token: string
+): Promise<PaginatedResponse<CreateJobData>> => {
+  try {
+    // Build query string from filters
+    const queryParams = new URLSearchParams();
+
+    // Object.entries(filters).forEach(([key, value]) => {
+    //   if (value !== undefined && value !== null) {
+    //     if (Array.isArray(value)) {
+    //       // Handle array values (like jobTypes, categories)
+    //       value.forEach((item) => {
+    //         queryParams.append(key, item);
+    //       });
+    //     } else {
+    //       queryParams.append(key, String(value));
+    //     }
+    //   }
+    // });
+    Object.entries(params).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        // Handle arrays properly
+        value.forEach((v) => queryParams.append(key, v));
+      } else if (value !== undefined && value !== null) {
+        queryParams.append(key, value.toString());
+      }
+    });
+
+    const response = await fetch(
+      `${API_URL}/jobs/search?${queryParams.toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to search jobs");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Frontend - Search jobs error:", error);
+    throw error;
+  }
+};
+
+// Get job details
+export const getJobDetails = async (
+  jobId: string,
+  token: string
+): Promise<CreateJobData> => {
+  try {
+    const response = await fetch(`${API_URL}/jobs/${jobId}/details`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to fetch job details");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Frontend - Fetch job details error:", error);
+    throw error;
+  }
+};
+
+// Helper function to increment job views
+export const incrementJobViews = async (
+  jobId: string,
+  token: string
+): Promise<void> => {
+  try {
+    const response = await fetch(`${API_URL}/jobs/${jobId}/view`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to increment job views");
+    }
+  } catch (error) {
+    console.error("Frontend - Increment job views error:", error);
+    // Silently fail as this is not critical
   }
 };
