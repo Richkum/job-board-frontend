@@ -1,72 +1,221 @@
-// src/app/jobs/page.tsx
 "use client";
 
-import DashboardLayout from "@/components/laoyout/DashboardLayout";
-import { Navbar } from "@/components/navbar/Navbar";
+import { useEffect, useState } from "react";
+import LoadingIndicator from "@/components/ui/Loading";
+import Toast, { ToastType } from "@/components/ui/toast.alert";
+import { useAuth } from "@/context/AuthContext";
+import JobList from "@/components/jobs/JobList";
+import JobSearchHeader from "@/components/jobs/JobSearchHeader";
+import { getActiveJobs, searchJobs } from "@/services/job.api";
+import JobFilterSidebar from "@/components/jobs/JobFilterSidebar";
+import MobileFilterDrawer from "@/components/jobs/MobileFilterDrawer";
+import JobCardSkeleton from "@/components/jobs/JobCardSkeleton";
+import { Job } from "@/types/jobs";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import DashboardLayout from "@/components/laoyout/DashboardLayout";
 
 export default function JobsPage() {
-  // Sample job listings
-  const jobs = [
-    {
-      id: 1,
-      title: "Frontend Developer",
-      company: "TechCorp",
-      location: "Remote",
-      type: "Full-time",
-    },
-    {
-      id: 2,
-      title: "Backend Engineer",
-      company: "DataSystems",
-      location: "New York",
-      type: "Full-time",
-    },
-    {
-      id: 3,
-      title: "UI/UX Designer",
-      company: "CreativeAgency",
-      location: "San Francisco",
-      type: "Contract",
-    },
-  ];
+  const { token, isAuthenticated, isLoading: authLoading } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  const [filters, setFilters] = useState({
+    page: 1,
+    limit: 10,
+  });
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    total: 0,
+    hasMore: false,
+  });
+
+  // Toast state
+  const [toast, setToast] = useState<{
+    show: boolean;
+    type: ToastType;
+    message: string;
+  }>({
+    show: false,
+    type: "info",
+    message: "",
+  });
+
+  const showToast = (type: ToastType, message: string) => {
+    setToast({ show: true, type, message });
+  };
+
+  useEffect(() => {
+    if (!authLoading && isAuthenticated && token) {
+      loadJobs();
+    }
+  }, [filters, authLoading, isAuthenticated, token]);
+
+  const loadJobs = async () => {
+    if (!token) return;
+
+    try {
+      setLoading(true);
+      const response = await getActiveJobs(filters.page, filters.limit, token);
+
+      setJobs(response.jobs);
+      setPagination({
+        currentPage: response.currentPage,
+        totalPages: response.totalPages,
+        total: response.total,
+        hasMore: response.hasMore,
+      });
+    } catch (error) {
+      console.error("Failed to load jobs:", error);
+      showToast("error", "Failed to load jobs. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = async (searchTerm: string) => {
+    if (!token) return;
+
+    try {
+      setLoading(true);
+      const response = await searchJobs(
+        {
+          search: searchTerm,
+          page: 1,
+          limit: filters.limit,
+        },
+        token
+      );
+
+      setJobs(response.jobs);
+      setPagination({
+        currentPage: response.currentPage,
+        totalPages: response.totalPages,
+        total: response.total,
+        hasMore: response.hasMore,
+      });
+      setFilters((prev) => ({ ...prev, page: 1 }));
+    } catch (error) {
+      console.error("Search failed:", error);
+      showToast("error", "Failed to search jobs. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFilter = async (newFilters: any) => {
+    if (!token) return;
+
+    try {
+      setLoading(true);
+      const response = await searchJobs(
+        {
+          ...newFilters,
+          page: 1,
+          limit: filters.limit,
+        },
+        token
+      );
+
+      setJobs(response.jobs);
+      setPagination({
+        currentPage: response.currentPage,
+        totalPages: response.totalPages,
+        total: response.total,
+        hasMore: response.hasMore,
+      });
+      setFilters((prev) => ({ ...prev, ...newFilters, page: 1 }));
+    } catch (error) {
+      console.error("Filter failed:", error);
+      showToast("error", "Failed to apply filters. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setFilters((prev) => ({ ...prev, page: newPage }));
+  };
+
+  if (authLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <LoadingIndicator />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div
+        className="flex flex-col items-center justify-center min-h-screen 
+                    bg-bg dark:bg-bg-dark"
+      >
+        <h2 className="text-2xl font-bold text-text dark:text-text-dark mb-4">
+          Please login to view jobs
+        </h2>
+        <p className="text-textSecondary dark:text-textSecondary-dark">
+          You need to be logged in to access this page
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
-        <div className="min-h-screen bg-bg dark:bg-bg-dark text-text dark:text-text-dark">
-          <main className="container mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold mb-6">Available Jobs</h1>
+    <>
+      <ProtectedRoute>
+        <DashboardLayout>
+          <div className="min-h-screen bg-bg dark:bg-bg-dark">
+            {toast.show && (
+              <Toast
+                type={toast.type}
+                message={toast.message}
+                onClose={() => setToast((prev) => ({ ...prev, show: false }))}
+              />
+            )}
 
-            <div className="space-y-4">
-              {jobs.map((job) => (
-                <div
-                  key={job.id}
-                  className="bg-bgCard dark:bg-bgCard-dark rounded-lg shadow p-6 border border-border dark:border-border-dark"
-                >
-                  <h2 className="font-medium text-lg">{job.title}</h2>
-                  <p className="text-textSecondary dark:text-textSecondary-dark text-sm mt-1">
-                    {job.company}
-                  </p>
-                  <div className="flex gap-2 mt-3">
-                    <span className="bg-bgSecondary dark:bg-bgSecondary-dark text-textSecondary dark:text-textSecondary-dark text-xs px-2 py-1 rounded">
-                      {job.location}
-                    </span>
-                    <span className="bg-primary-light dark:bg-primary-dark/20 text-primary text-xs px-2 py-1 rounded">
-                      {job.type}
-                    </span>
-                  </div>
-                  <div className="mt-4">
-                    <button className="bg-primary hover:bg-primary-dark text-white py-1.5 px-3 rounded text-sm transition-colors">
-                      View Details
-                    </button>
-                  </div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              <JobSearchHeader
+                totalJobs={pagination.total}
+                onSearch={handleSearch}
+                onOpenMobileFilters={() => setIsMobileFilterOpen(true)}
+              />
+
+              <div className="mt-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+                {/* Desktop Filters */}
+                <div className="hidden lg:block">
+                  <JobFilterSidebar onFilter={handleFilter} />
                 </div>
-              ))}
+
+                {/* Mobile Filter Drawer */}
+                <MobileFilterDrawer
+                  isOpen={isMobileFilterOpen}
+                  onClose={() => setIsMobileFilterOpen(false)}
+                  onFilter={handleFilter}
+                />
+
+                {/* Job Listings */}
+                <div className="lg:col-span-3">
+                  {loading ? (
+                    <div className="space-y-4">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <JobCardSkeleton key={i} />
+                      ))}
+                    </div>
+                  ) : (
+                    <JobList
+                      jobs={jobs}
+                      pagination={pagination}
+                      onPageChange={handlePageChange}
+                    />
+                  )}
+                </div>
+              </div>
             </div>
-          </main>
-        </div>
-      </DashboardLayout>
-    </ProtectedRoute>
+          </div>
+        </DashboardLayout>{" "}
+      </ProtectedRoute>
+    </>
   );
 }
