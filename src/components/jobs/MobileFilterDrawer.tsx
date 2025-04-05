@@ -40,7 +40,7 @@ export default function MobileFilterDrawer({
 
       {/* Drawer */}
       <div
-        className={`absolute inset-y-0 right-0 w-full max-w-sm transform
+        className={`absolute inset-y-0 right-0 w-10 max-w-sm transform
                      ${isOpen ? "translate-x-0" : "translate-x-full"}
                      transition-transform duration-300 ease-in-out`}
       >

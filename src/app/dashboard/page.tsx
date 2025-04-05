@@ -1,29 +1,58 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import LoadingIndicator from "@/components/ui/Loading";
 import LogoutButton from "@/components/ui/logout";
 import DashboardLayout from "@/components/laoyout/DashboardLayout";
+import Toast from "@/components/ui/toast.alert";
 
 function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Optional - extra protection layer
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push("/");
-    }
-  }, [isAuthenticated, isLoading, router]);
+    const fetchDahboardDetails = async () => {
+      try {
+        // Simulate loading (replace this with your actual fetch call)
+        await new Promise((resolve) => setTimeout(resolve, 1500));
 
-  if (isLoading) {
+        // Simulate an error (uncomment to test)
+        // throw new Error("Something went wrong fetching dashboard details");
+
+        // If successful, clear error (if any)
+        setError(null);
+      } catch (err: any) {
+        setError(err.message || "Unknown error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDahboardDetails();
+  }, []);
+
+  if (loading) {
     return (
-      <>
-        <LoadingIndicator />
-      </>
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <LoadingIndicator />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <Toast type="error" message={error} onClose={() => setError(null)} />
+        </div>
+      </DashboardLayout>
     );
   }
 
