@@ -22,6 +22,7 @@ export interface JobSalary {
 }
 
 export interface Job {
+  poster: string;
   _id: string;
   title: string;
   subtitle?: string;

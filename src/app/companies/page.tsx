@@ -4,34 +4,53 @@ import Toast from "@/components/ui/toast.alert";
 import { useAuth } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import DashboardLayout from "@/components/laoyout/DashboardLayout";
+import { useState, useEffect } from "react";
 
 export default function Companies() {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (isLoading) {
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        // Simulate loading (replace this with your actual fetch call)
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+
+        // Simulate an error (uncomment to test)
+        // throw new Error("Something went wrong fetching companies");
+
+        // If successful, clear error (if any)
+        setError(null);
+      } catch (err: any) {
+        setError(err.message || "Unknown error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
+  if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <LoadingIndicator />
-      </div>
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <LoadingIndicator />
+        </div>
+      </DashboardLayout>
     );
   }
 
-  if (!isAuthenticated) {
+  if (error) {
     return (
-      <div
-        className="flex flex-col items-center justify-center min-h-screen 
-                    bg-bg dark:bg-bg-dark"
-      >
-        <h2 className="text-2xl font-bold text-text dark:text-text-dark mb-4">
-          Please login to view jobs
-        </h2>
-        <p className="text-textSecondary dark:text-textSecondary-dark">
-          You need to be logged in to access this page
-        </p>
-      </div>
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <Toast type="error" message={error} onClose={() => setError(null)} />
+        </div>
+      </DashboardLayout>
     );
   }
-
   return (
     <>
       <ProtectedRoute>

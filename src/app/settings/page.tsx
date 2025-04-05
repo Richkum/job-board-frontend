@@ -21,7 +21,7 @@ export default function SettingsPage() {
             <p className="mb-2">CYour are now on the settings page</p>
             <Link href="/settings/profile">
               {" "}
-              <p>Profile settings</p>
+              <p className="underline hover:text-primary">Profile settings</p>
             </Link>
           </div>
         </div>

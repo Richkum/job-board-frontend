@@ -266,25 +266,36 @@ export default function ProfilePage() {
   };
 
   if (isLoading || profileLoading) {
-    return <LoadingIndicator />;
+    return (
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <LoadingIndicator />
+        </div>
+      </DashboardLayout>
+    );
   }
 
   if (!userProfile) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-bg dark:bg-bg-dark">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-4"> {} Profile not found</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Unable to load your profile information.
-          </p>
-          <button
-            onClick={() => fetchUserProfile()}
-            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
-          >
-            Retry
-          </button>
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-screen bg-bg dark:bg-bg-dark">
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold mb-4">
+              {" "}
+              {} Profile not found
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Unable to load your profile information.
+            </p>
+            <button
+              onClick={() => fetchUserProfile()}
+              className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
+            >
+              Retry
+            </button>
+          </div>
         </div>
-      </div>
+      </DashboardLayout>
     );
   }
 

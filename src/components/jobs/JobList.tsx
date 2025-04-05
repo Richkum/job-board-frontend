@@ -46,8 +46,8 @@ export default function JobList({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="grid gap-4">
+    <div className="space-y-6 w-full">
+      <div className="grid gap-y-4">
         {jobs.map((job) => (
           <JobCard key={job._id} job={job} />
         ))}

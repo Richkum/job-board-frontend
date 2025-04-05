@@ -52,14 +52,14 @@ export default function JobCard({ job }: JobCardProps) {
                  hover:shadow-lg hover:border-primary dark:hover:border-primary
                  transition-all duration-200"
     >
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         {/* Company Logo and Job Title */}
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">
             {!imageError ? (
               <img
-                src={job.company?.logo || "/company-placeholder.png"}
-                alt={`${job.company?.name || "Company"} logo`}
+                src={job.poster || "/company-placeholder.png"}
+                alt={`${job.poster || "Company"} logo`}
                 className="w-12 h-12 rounded-lg object-cover bg-bgSecondary dark:bg-bgSecondary-dark"
                 onError={() => setImageError(true)}
               />

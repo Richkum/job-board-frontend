@@ -181,7 +181,7 @@ export default function JobFilterSidebar({
     <div
       className={`bg-white dark:bg-bgCard-dark rounded-lg border border-border 
                     dark:border-border-dark ${className} ${
-        isMobile ? "fixed inset-y-0 right-0 w-80 z-50 shadow-xl" : ""
+        isMobile ? "fixed inset-y-0 right-0 w-64 sm:w-80 z-50 shadow-xl" : ""
       }`}
     >
       <div className="p-4">
