@@ -50,10 +50,19 @@ export default function JobSearchHeader({
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("Form submitted, preventing default");
     e.preventDefault();
+
     try {
       setIsSearching(true);
-      await onSearch(searchTerm);
+
+      // Check if the search term is empty
+      if (!searchTerm.trim()) {
+        // If search term is empty, load all jobs
+        await onSearch("");
+      } else {
+        await onSearch(searchTerm);
+      }
     } catch (error) {
       console.error("Search failed:", error);
     } finally {

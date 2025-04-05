@@ -374,24 +374,19 @@ export const searchJobs = async (
     // Build query string from filters
     const queryParams = new URLSearchParams();
 
-    // Object.entries(filters).forEach(([key, value]) => {
-    //   if (value !== undefined && value !== null) {
-    //     if (Array.isArray(value)) {
-    //       // Handle array values (like jobTypes, categories)
-    //       value.forEach((item) => {
-    //         queryParams.append(key, item);
-    //       });
-    //     } else {
-    //       queryParams.append(key, String(value));
-    //     }
-    //   }
-    // });
     Object.entries(params).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        // Handle arrays properly
-        value.forEach((v) => queryParams.append(key, v));
-      } else if (value !== undefined && value !== null) {
-        queryParams.append(key, value.toString());
+      if (value !== undefined && value !== null) {
+        if (Array.isArray(value)) {
+          // For array values like jobTypes, add each item separately
+          value.forEach((item) => {
+            if (item !== null && item !== undefined) {
+              queryParams.append(key, item);
+            }
+          });
+        } else {
+          // For non-array values, add them directly
+          queryParams.append(key, value.toString());
+        }
       }
     });
 

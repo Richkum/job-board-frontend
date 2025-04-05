@@ -100,21 +100,26 @@ export default function JobFilterSidebar({
 
   const applyFilters = () => {
     const formattedFilters = {
-      ...filters,
-      jobTypes: filters.jobTypes || undefined,
-      categories: filters.categories || undefined,
-      experienceLevels: filters.experienceLevels || undefined,
-      locationTypes: filters.locationTypes || undefined,
-      // Add other filter fields as needed
-      salaryRange: filters.salaryRange
-        ? {
-            ...filters.salaryRange,
-            min: Number(filters.salaryRange.min),
-            max: Number(filters.salaryRange.max),
-          }
+      jobTypes: filters.jobTypes?.length ? filters.jobTypes : undefined,
+      categories: filters.categories?.length ? filters.categories : undefined,
+      experienceLevels: filters.experienceLevels?.length
+        ? filters.experienceLevels
         : undefined,
+      locationTypes: filters.locationTypes?.length
+        ? filters.locationTypes
+        : undefined,
+      // Convert salary range to individual properties
+      salaryMin: filters.salaryRange?.min
+        ? Number(filters.salaryRange.min)
+        : undefined,
+      salaryMax: filters.salaryRange?.max
+        ? Number(filters.salaryRange.max)
+        : undefined,
+      salaryCurrency: filters.salaryRange?.currency || undefined,
+      salaryPeriod: filters.salaryRange?.period || undefined,
     };
     onFilter(formattedFilters);
+
     if (isMobile && onClose) {
       onClose();
     }

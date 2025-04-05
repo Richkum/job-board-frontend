@@ -13,11 +13,15 @@ import JobCardSkeleton from "@/components/jobs/JobCardSkeleton";
 import { Job } from "@/types/jobs";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import DashboardLayout from "@/components/laoyout/DashboardLayout";
+import ErrorState from "@/components/ErrorState";
 
 export default function JobsPage() {
   const { token, isAuthenticated, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   const [filters, setFilters] = useState({
@@ -47,11 +51,10 @@ export default function JobsPage() {
   };
 
   useEffect(() => {
-    if (!authLoading && isAuthenticated && token) {
+    if (!authLoading && isAuthenticated && token && !isSearchActive) {
       loadJobs();
     }
-  }, [filters, authLoading, isAuthenticated, token]);
-
+  }, [filters, authLoading, isAuthenticated, token, isSearchActive]);
   const loadJobs = async () => {
     if (!token) return;
 
@@ -59,7 +62,7 @@ export default function JobsPage() {
       setLoading(true);
       const response = await getActiveJobs(filters.page, filters.limit, token);
 
-      setJobs(response.jobs);
+      setJobs(response.jobs as unknown as Job[]);
       setPagination({
         currentPage: response.currentPage,
         totalPages: response.totalPages,
@@ -79,6 +82,7 @@ export default function JobsPage() {
 
     try {
       setLoading(true);
+      setIsSearchActive(true); // Set search as active
       const response = await searchJobs(
         {
           search: searchTerm,
@@ -88,7 +92,7 @@ export default function JobsPage() {
         token
       );
 
-      setJobs(response.jobs);
+      setJobs(response.jobs as unknown as Job[]);
       setPagination({
         currentPage: response.currentPage,
         totalPages: response.totalPages,
@@ -118,7 +122,7 @@ export default function JobsPage() {
         token
       );
 
-      setJobs(response.jobs);
+      setJobs(response.jobs as unknown as Job[]);
       setPagination({
         currentPage: response.currentPage,
         totalPages: response.totalPages,
