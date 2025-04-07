@@ -9,6 +9,7 @@ interface MobileFilterDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   onFilter: (filters: JobFilterType) => void;
+  activeFilters: Record<string, any>; // Add activeFilters property
 }
 
 export default function MobileFilterDrawer({
@@ -40,7 +41,7 @@ export default function MobileFilterDrawer({
 
       {/* Drawer */}
       <div
-        className={`absolute inset-y-0 right-0 w-10 max-w-sm transform
+        className={`absolute inset-y-0 right-0 w-full max-w-sm transform
                      ${isOpen ? "translate-x-0" : "translate-x-full"}
                      transition-transform duration-300 ease-in-out`}
       >
@@ -49,6 +50,7 @@ export default function MobileFilterDrawer({
           onClose={onClose}
           isMobile={true}
           className="h-full overflow-y-auto"
+          activeFilters={{}}
         />
       </div>
     </div>,

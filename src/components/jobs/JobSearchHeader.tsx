@@ -8,6 +8,11 @@ interface JobSearchHeaderProps {
   totalJobs: number;
   onSearch: (searchTerm: string) => Promise<void>;
   onOpenMobileFilters?: () => void;
+  searchTerm: string; // Added searchTerm property
+
+  isSearchActive: boolean; // Added isSearchActive property
+
+  onClearSearch: () => void; // Added onClearSearch property
 }
 
 export default function JobSearchHeader({

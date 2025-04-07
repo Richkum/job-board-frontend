@@ -9,6 +9,7 @@ interface JobFilterSidebarProps {
   className?: string;
   isMobile?: boolean;
   onClose?: () => void;
+  activeFilters: Record<string, any>; // Add activeFilters property
 }
 
 export default function JobFilterSidebar({
