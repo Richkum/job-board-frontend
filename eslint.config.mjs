@@ -18,6 +18,7 @@ const eslintConfig = [
       "react/no-unescaped-entities": "off", // Disable the rule for unescaped entities in JSX
       "@typescript-eslint/no-unused-vars": "off", // Disable the rule for unused variables
       "@typescript-eslint/no-unused-expressions": "off", // Disable the rule for unused expressions
+      "prefer-const": "off", // Disable the rule for preferring const over let
     },
   },
 ];
