@@ -2,7 +2,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 
 // Define the base URL for API requests - consider moving to env variable
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Create an axios instance
 const apiClient = axios.create({

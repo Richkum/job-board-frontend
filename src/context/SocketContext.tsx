@@ -24,16 +24,13 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (!isAuthenticated || !token) return;
 
-    const socketInstance = io(
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000",
-      {
-        auth: {
-          token: `Bearer ${token}`,
-        },
-        transports: ["websocket"],
-        autoConnect: true,
-      }
-    );
+    const socketInstance = io(process.env.NEXT_PUBLIC_API_URL, {
+      auth: {
+        token: `Bearer ${token}`,
+      },
+      transports: ["websocket"],
+      autoConnect: true,
+    });
 
     socketInstance.on("connect", () => {
       console.log("Socket connected");
