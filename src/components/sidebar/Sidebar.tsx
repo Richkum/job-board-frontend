@@ -401,17 +401,17 @@ const sidebarLinks: SidebarLink[] = [
     icon: <Upload size={20} />,
     roles: ["employer", "admin"],
   },
-  {
-    href: "/companies",
-    label: "Companies",
-    icon: <Building2 size={20} />,
-  },
-  {
-    href: "/candidates",
-    label: "Candidates",
-    icon: <Users size={20} />,
-    roles: ["employer", "admin"],
-  },
+  // {
+  //   href: "/companies",
+  //   label: "Companies",
+  //   icon: <Building2 size={20} />,
+  // },
+  // {
+  //   href: "/candidates",
+  //   label: "Candidates",
+  //   icon: <Users size={20} />,
+  //   roles: ["employer", "admin"],
+  // },
   {
     href: "/applications",
     label: "Applications",
@@ -429,50 +429,50 @@ const sidebarLinks: SidebarLink[] = [
     label: "Messages",
     icon: <MessageSquare size={20} />,
   },
-  {
-    href: "/saved",
-    label: "Saved Jobs",
-    icon: <Bookmark size={20} />,
-    roles: ["jobSeeker", "admin"],
-  },
+  // {
+  //   href: "/saved",
+  //   label: "Saved Jobs",
+  //   icon: <Bookmark size={20} />,
+  //   roles: ["jobSeeker", "admin"],
+  // },
   {
     href: "/notifications",
     label: "Notifications",
     icon: <NotificationList />,
   },
-  {
-    href: "/favorites",
-    label: "Favorite Candidates",
-    icon: <Heart size={20} />,
-    roles: ["employer", "admin"],
-  },
+  // {
+  //   href: "/favorites",
+  //   label: "Favorite Candidates",
+  //   icon: <Heart size={20} />,
+  //   roles: ["employer", "admin"],
+  // },
   {
     href: "/settings/profile",
     label: "My Profile",
     icon: <User size={20} />,
   },
-  {
-    href: "/analytics",
-    label: "Analytics",
-    icon: <BarChart2 size={20} />,
-    roles: ["employer", "admin"],
-  },
+  // {
+  //   href: "/analytics",
+  //   label: "Analytics",
+  //   icon: <BarChart2 size={20} />,
+  //   roles: ["employer", "admin"],
+  // },
   {
     href: "/admin",
     label: "Admin Panel",
     icon: <ShieldCheck size={20} />,
     roles: ["admin"],
   },
-  {
-    href: "/resources",
-    label: "Resources",
-    icon: <HelpCircle size={20} />,
-  },
-  {
-    href: "/premium",
-    label: "Premium",
-    icon: <Award size={20} />,
-  },
+  // {
+  //   href: "/resources",
+  //   label: "Resources",
+  //   icon: <HelpCircle size={20} />,
+  // },
+  // {
+  //   href: "/premium",
+  //   label: "Premium",
+  //   icon: <Award size={20} />,
+  // },
   {
     href: "/settings",
     label: "Settings",
