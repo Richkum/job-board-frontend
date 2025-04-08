@@ -109,3 +109,7 @@ export type PaginatedApplicationsResponseDto = {
   limit: number;
   totalPages: number;
 };
+
+export type UpdateApplicationStatusResponseDto = ApplicationResponseDto;
+
+export type WithdrawApplicationResponseDto = ApplicationResponseDto;
