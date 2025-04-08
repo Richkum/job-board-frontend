@@ -3,13 +3,9 @@
 
 import AuthTest from "@/components/AuthDebug";
 import DashboardLayout from "@/components/laoyout/DashboardLayout";
-import { Navbar } from "@/components/navbar/Navbar";
-import { useTheme } from "@/context/ThemeContext";
 import Link from "next/link";
 
 export default function SettingsPage() {
-  const { theme, toggleTheme } = useTheme();
-
   return (
     <div>
       <DashboardLayout>
