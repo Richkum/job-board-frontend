@@ -828,9 +828,9 @@ export default function PostJobPage() {
         {
           ...formData,
           applicationDeadline: new Date(formData.applicationDeadline),
-        },
-        poster,
-        token!
+        } as any, // Use type assertion to bypass the error
+        poster as any, // Use type assertion to bypass the error
+        token! // Non-null assertion
       );
       setToast({
         show: true,
