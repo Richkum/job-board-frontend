@@ -56,6 +56,7 @@ export type WithdrawApplicationDto = {
 };
 
 export type ApplicationResponseDto = {
+  user: any;
   id: string;
   job: {
     id: string;
