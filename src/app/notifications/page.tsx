@@ -96,6 +96,7 @@ export default function NotificationsPage() {
     };
 
     fetchNotifications();
+    console.error("Notifications:", notifications);
   }, []);
 
   if (loading) {

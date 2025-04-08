@@ -4,9 +4,9 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import DashboardLayout from "@/components/laoyout/DashboardLayout";
 import { useAuth } from "@/context/AuthContext";
 import LoadingIndicator from "@/components/ui/Loading";
-
 import Toast, { ToastType } from "@/components/ui/toast.alert";
 import { useState } from "react";
+import EmployerApplicationPage from "./Employer";
 
 export default function Applications() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -48,7 +48,11 @@ export default function Applications() {
     <>
       <ProtectedRoute>
         <DashboardLayout>
-          <JobSeakerApplicationPage />
+          {user?.role === "employer" ? (
+            <EmployerApplicationPage />
+          ) : (
+            <JobSeakerApplicationPage />
+          )}
         </DashboardLayout>
       </ProtectedRoute>
     </>
