@@ -170,7 +170,7 @@ export default function ProfilePage() {
       setFormData((prev) => ({
         ...prev,
         [section]: {
-          ...prev[section as keyof UpdateProfileData],
+          ...(prev[section as keyof UpdateProfileData] as object),
           [field]: value,
         },
       }));
