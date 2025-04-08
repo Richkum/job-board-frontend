@@ -3,7 +3,7 @@
 import { UserProfile, UpdateProfileData } from "@/types/user";
 
 // API base URL from environment or default
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 /**
  * Fetch the current user's profile

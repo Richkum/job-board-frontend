@@ -7,7 +7,7 @@ import {
   WithdrawApplicationDto,
 } from "@/types/application";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Job Seekers API Calls
 

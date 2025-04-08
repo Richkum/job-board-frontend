@@ -31,8 +31,7 @@ export interface UserProfile {
 }
 
 // Base URL for API
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 /**
  * Fetch the user profile from the API

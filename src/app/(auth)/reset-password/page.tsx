@@ -8,6 +8,9 @@ import LoadingIndicator from "@/components/ui/Loading";
 import Toast from "@/components/ui/toast.alert";
 
 export default function ResetPasswordPage() {
+  //get the API URL from the environment variable
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   // Email step state
   const [email, setEmail] = useState("");
   const [emailTouched, setEmailTouched] = useState(false);
@@ -159,7 +162,7 @@ export default function ResetPasswordPage() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/forgot-password",
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/forgot-password`,
         {
           method: "POST",
           headers: {
@@ -231,7 +234,7 @@ export default function ResetPasswordPage() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/reset-password",
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`,
         {
           method: "POST",
           headers: {
