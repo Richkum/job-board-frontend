@@ -228,28 +228,28 @@ export default function LandingPage() {
       value: "remote",
       icon: Building2,
       label: "Remote Jobs",
-      count: "1.2k+",
+      // count: "1.2k+",
     },
     {
       type: "jobTypes" as const,
       value: "full-time",
       icon: TrendingUp,
       label: "Full-time",
-      count: "3.5k+",
+      // count: "3.5k+",
     },
     {
       type: "locationTypes" as const,
       value: "on-site",
       icon: MapPin,
       label: "On-site",
-      count: "2.1k+",
+      // count: "2.1k+",
     },
     {
       type: "jobTypes" as const,
       value: "contract",
       icon: Briefcase,
       label: "Contract",
-      count: "890+",
+      // count: "890+",
     },
   ];
 
@@ -468,7 +468,7 @@ export default function LandingPage() {
                           : "text-textMuted dark:text-textMuted-dark"
                       }`}
                     >
-                      {filter.count}
+                      {/* {filter.count} */}
                     </div>
                   </div>
                 </button>
